@@ -1,0 +1,5 @@
+*.swp
+figures.aux
+figures.log
+figures.fls
+figures.fdb_latexmk
