@@ -4,22 +4,24 @@
 all : figures.pdf
 
 figures.pdf : figures.tex plots/basic.pdf plots/clonefreq.pdf plots/vdist.pdf \
-	plots/segregation.pdf plots/usage-shared.pdf
+	plots/segregation.pdf plots/usage-shared.pdf plots/permutation-test.pdf \
+	plots/fig4.pdf plots/dge.pdf plots/histo.pdf
 	latexmk -use-make -pdf $<
 
-plots/%.pdf : plots-%.R tmp/basic.image tmp/extra-nucs.image tmp/dmat-spleen-naive.tex
+plots/%.pdf : scripts/%.R tmp/basic.image tmp/extra-nucs.image tmp/dmat-spleen-naive.tex \
+	tmp/dge.image
 	Rscript $<
 
-tmp/dmat-spleen-naive.tex : visualize-segregation.R data/dmat-spleen-naive.txt
+tmp/dmat-spleen-naive.tex : scripts/visualize-segregation.R data/dmat-spleen-naive.txt tmp/overlaps.image
 	Rscript $<
 
-tmp/extra-nucs.image : plots-vjnuc-prepare.R tmp/overlaps.image
+tmp/extra-nucs.image : scripts/vjnuc-prepare.R tmp/overlaps.image
 	Rscript $<
 
-tmp/basic.image : plots-basic-prepare.R
+tmp/dge.image : scripts/dge-prepare.R tmp/overlaps.image
 	Rscript $<
 
-tmp/overlaps.image : plots-overlaps-prepare.R
+tmp/%.image : scripts/%-prepare.R
 	Rscript $<
 
 clean:
